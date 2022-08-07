@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title></title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header th:insert="blocks/admin_header.html"></header>
+<section class="py-4">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="mx-auto">
+            <div class="col mb-5">
+                <div class="card h-100  p-5" th:each="el:${product}">
+                    <form class="form-group" name="form" id="form" enctype="multipart/form-data"
+                          method="post">
+                        <div class="form-group ">
+                            <label>Тип тканини:</label><br>
+                            <div class="mb-1">
+                                <input type="radio" id="silk" name="p_type" value="1" th:checked="${el.type=='1'}">
+                                <label for="silk">Шовк &nbsp&nbsp </label>
+                                <input type="radio" id="linen" name="p_type" value="2"  th:checked="${el.type=='2'}">
+                                <label for="linen">Льон &nbsp&nbsp </label>
+                                <input type="radio" id="chiffon" name="p_type" value="3"  th:checked="${el.type=='3'}">
+                                <label for="chiffon">Шифон &nbsp&nbsp </label>
+                                <input type="radio" id="costume" name="p_type" value="4"  th:checked="${el.type=='4'}">
+                                <label for="costume">Костюмні &nbsp&nbsp </label>
+                            </div>
+                            <div class="mb-1">
+                                <input type="radio" id="lace guipure" name="p_type" value="5"  th:checked="${el.type=='5'}">
+                                <label for="lace guipure">Мереживо,Гіпюр &nbsp&nbsp </label>
+                                <input type="radio" id="jersey" name="p_type" value="6"  th:checked="${el.type=='6'}">
+                                <label for="jersey">Трикотаж &nbsp&nbsp </label>
+                                <input type="radio" id="biflex" name="p_type" value="7"  th:checked="${el.type=='7'}">
+                                <label for="biflex">Біфлекс &nbsp&nbsp </label>
+                                <input type="radio" id="coats" name="p_type" value="8"  th:checked="${el.type=='8'}">
+                                <label for="coats">Пальтові &nbsp&nbsp </label>
+                            </div>
+                            <div class="mb-1">
+                                <input type="radio" id="raincoat, leather, fur" name="p_type" value="9"  th:checked="${el.type=='9'}">
+                                <label for="raincoat, leather, fur">Плащівка, шкіра, хутро &nbsp&nbsp </label>
+                                <input type="radio" id="jeans" name="p_type" value="10"  th:checked="${el.type=='10'}">
+                                <label for="jeans">Джинс &nbsp&nbsp </label>
+                                <input type="radio" id="sequins" name="p_type" value="11"  th:checked="${el.type=='11'}">
+                                <label for="sequins">Паєтки &nbsp&nbsp </label>
+                                <input type="radio" id="velvet, velour" name="p_type" value="12"  th:checked="${el.type=='12'}">
+                                <label for="velvet, velour">Вельвет, велюр &nbsp&nbsp </label>
+                            </div>
+                            <div class="mb-1">
+                                <input type="radio" id="lining" name="p_type" value="13"  th:checked="${el.type=='13'}">
+                                <label for="lining">Підкладкові &nbsp&nbsp </label>
+                                <input type="radio" id="for the house" name="p_type" value="14"  th:checked="${el.type=='14'}">
+                                <label for="for the house">Для будинку &nbsp&nbsp </label>
+                                <input type="radio" id="fatin, net" name="p_type" value="15"  th:checked="${el.type=='15'}">
+                                <label for="fatin, net">Фатін, сітка &nbsp&nbsp </label>
+                                <input type="radio" id="cotton" name="p_type" value="16"  th:checked="${el.type=='16'}">
+                                <label for="cotton">Бавовняні &nbsp&nbsp </label>
+                            </div>
+                            <div class="mb-1">
+                                <input type="radio" id="atlas, satin" name="p_type" value="17"  th:checked="${el.type=='17'}">
+                                <label for="atlas, satin">Атлас, сатин &nbsp&nbsp </label>
+                            </div>
+                            <label for="title">Назва:</label><br>
+                            <input class="form-control" type="text" id="title" name="title" th:value="${el.title}"><br>
+                            <label for="description">Опис:</label><br>
+                            <input class="form-control" type="text" id="description" name="description" th:value="${el.description}"><br>
+                            <label for="stocks">Загальна довжина тканини (метри):</label><br>
+                            <input class="form-control" type="text" id="stocks" name="stocks" th:value="${el.stocks}"><br>
+                            <label for="country">Країна:</label><br>
+                            <input class="form-control" type="text" id="country" name="country" th:value="${el.country}"><br>
+                            <label for="composition">Склад тканини:</label><br>
+                            <input class="form-control" type="text" id="composition" name="composition" th:value="${el.composition}"><br>
+                            <label for="width">Ширина (см):</label><br>
+                            <input class="form-control" type="text" id="width" name="width" th:value="${el.width}"><br>
+                            <label for="density">Щільність:</label><br>
+                            <input class="form-control" type="text" id="density" name="density" th:value="${el.density}"><br>
+                            <label for="price">Ціна за погонний метр:</label><br>
+                            <input class="form-control" type="text" id="price" name="price" th:value="${el.price}"><br>
+                            <label for="p_w_sale">Ціна зі знижкою:</label><br>
+                            <input class="form-control" type="text" id="p_w_sale" name="p_w_sale" th:value="${el.p_w_sale}"><br>
+                            <label for="imgInp1">Завантажити фото №1</label><br>
+                            <input type='file' name="file1" accept="image/*" id="imgInp1"/><br><br>
+                            <img th:src="@{'/image/'+${el.id}}" id="blah1" style="max-height: 250px "/><br><br>
+                            <label for="imgInp1">Завантажити фото №2</label><br>
+                            <input type='file' name="file2" accept="image/*" id="imgInp2"/><br><br>
+                            <img th:src="@{'/image2/'+${el.id}}" id="blah2" style="max-height: 250px "/><br><br>
+                            <label for="imgInp1">Завантажити фото №3</label><br>
+                            <input type='file' name="file3" accept="image/*" id="imgInp3"/><br><br>
+                            <img th:src="@{'/image3/'+${el.id}}" id="blah3" style="max-height: 250px "/><br><br>
+
+
+                            <script>
+                                function previewPhoto(inpfile, imgfile) {
+                                    inpfile.onchange = evt => {
+                                        const [file] = inpfile.files
+                                        if (file) {
+                                            imgfile.src = URL.createObjectURL(file)
+                                        }
+                                    }
+                                }
+
+                                previewPhoto(imgInp1, blah1)
+                                previewPhoto(imgInp2, blah2)
+                                previewPhoto(imgInp3, blah3)
+                            </script>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+                            <button type="submit" value="Upload" class="btn btn-outline-dark mt-auto">Змінити данні
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer-->
+<footer th:insert="blocks/footer.html::footer"></footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<div th:fragment="admin_header">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+
+            <b><a class="navbar-brand" href="/admin_main_page" style="font-size: 22px ; ">Штапельок</a></b>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="/admin_main_page">Головна</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Магазин</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#!">Вся продукція</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#!">Популярні позиції</a></li>
+                            <li><a class="dropdown-item" href="#!">Нові позиції</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Типи тканей</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="'/category/'+${1}">Шовк</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${2}">Льон</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${3}">Шифон</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${4}">Костюмні</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${5}">Мереживо,Гіпюр</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${6}">Трикотаж</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${7}">Біфлекс</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${8}">Пальтові</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${9}">Плащівка, шкіра, хутро</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${10}">Джинс</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${11}">Паєтки</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${12}">Вельвет, велюр</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${13}">Підкладкові</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${14}">Для будинку</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${15}">Фатін, сітка</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${16}">Бавовняні</a></li>
+                            <li><a class="dropdown-item" th:href="'/category/'+${17}">Атлас, сатин</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Замовлення</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/add_prod">Додати товар</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Склад</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#!">Користувачі</a></li>
+
+
+                </ul>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4" >
+                    <li class="d-flex"><a class="nav-link" href="#!">Користувачі</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+</div>
