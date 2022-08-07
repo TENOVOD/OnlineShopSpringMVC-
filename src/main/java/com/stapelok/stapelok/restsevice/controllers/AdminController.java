@@ -1,7 +1,6 @@
 package com.stapelok.stapelok.restsevice.controllers;
 
 import com.stapelok.stapelok.models.Products;
-import com.stapelok.stapelok.repositories.ImagesRepository;
 import com.stapelok.stapelok.repositories.ProductsRepository;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.parser.Entity;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -26,12 +23,13 @@ import java.util.Optional;
 @Controller
 public class AdminController {
 
+
+
     //connect models repo and we can use db methods
     @Autowired
     private ProductsRepository productsRepository;
 
-    @Autowired
-    private ImagesRepository imagesRepository;
+
     @GetMapping("/admin_main_page")
     public String getAdminMainPage(Model model){
         Iterable<Products> products=productsRepository.findAll();
@@ -128,6 +126,7 @@ public class AdminController {
             IOUtils.copy(is,response.getOutputStream());
         }
     }
+
     @GetMapping("/image2/{id}")
     private void showSecondImage(@PathVariable long id, HttpServletResponse response) throws IOException{
         response.setContentType("image/jpg");

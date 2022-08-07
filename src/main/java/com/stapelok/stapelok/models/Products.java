@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 @Entity
-@Table(name="fabric")
+@Table(name="products")
 public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

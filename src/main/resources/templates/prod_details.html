@@ -58,8 +58,8 @@
                                 <div><a>Ціна: </a><a style="font-size: 1.1em"><b><s><span th:text="${el.price}"></span>&#x20b4;</s> <span th:text="${el.p_w_sale}"></span> &#x20b4;</b></a></div>
                             </div>
                             <p style="font-size: 0.8em; color: gray">*ціна вкзана за погонний метр</p>
-                            <form class="mt-1">
-                                <input type="number" class="form-control" style="width: 90px;" placeholder="0">
+                            <form class="mt-1" th:action="'/add/'+${el.id}" method="get">
+                                <input type="number" id="quantity" name="quantity" class="form-control" min="1" style="width: 90px;" value="1">
                                 <div th:if="${el.stock_status!='Закінчився'}">
 
                                 </div>

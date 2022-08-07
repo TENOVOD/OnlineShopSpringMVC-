@@ -1,16 +1,18 @@
 package com.stapelok.stapelok.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.sql.Date;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Cart {
 
-    @Id
-    @Column(name = "id")
-    private long id;
+   @Id
+   @Column(name="id")
+   @GeneratedValue(strategy = GenerationType.AUTO)
+   private long id;
+
+    @Column(name = "user_id")
+    private long user_id;
 
     @Column(name="id_prod")
     private long id_prod;
@@ -53,8 +55,16 @@ public class Cart {
         this.add_date = add_date;
     }
 
-    public Cart(long id, long id_prod, String quantity, Date add_date) {
-        this.id = id;
+    public long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(long user_id) {
+        this.user_id = user_id;
+    }
+
+    public Cart(long user_id, long id_prod, String quantity, Date add_date) {
+        this.user_id = user_id;
         this.id_prod = id_prod;
         this.quantity = quantity;
         this.add_date = add_date;
@@ -67,6 +77,7 @@ public class Cart {
     public String toString() {
         return "Cart{" +
                 "id=" + id +
+                ", user_id=" + user_id +
                 ", id_prod=" + id_prod +
                 ", quantity='" + quantity + '\'' +
                 ", add_date=" + add_date +
