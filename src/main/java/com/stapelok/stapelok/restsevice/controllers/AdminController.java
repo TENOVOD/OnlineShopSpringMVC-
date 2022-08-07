@@ -5,6 +5,7 @@ import com.stapelok.stapelok.repositories.ImagesRepository;
 import com.stapelok.stapelok.repositories.ProductsRepository;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +26,8 @@ import java.util.Optional;
 
 @Controller
 public class AdminController {
+
+
 
     //connect models repo and we can use db methods
     @Autowired
