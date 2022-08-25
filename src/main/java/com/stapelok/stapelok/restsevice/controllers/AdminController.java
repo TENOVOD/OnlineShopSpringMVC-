@@ -53,6 +53,13 @@ public class AdminController {
         return  "admin_add_prod";
     }
 
+    @GetMapping("/fabric")
+    private String getFabricPage(Model model){
+        ArrayList<Products> products= (ArrayList<Products>) productsRepository.findAll();
+        model.addAttribute("products",products);
+        return "fabric_storage";
+    }
+
     //form func to add new
     @PostMapping("/addprod")
     public String addProduct(@RequestParam("p_type") String p_type, @RequestParam String title, @RequestParam String description , @RequestParam String price,

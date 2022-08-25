@@ -1,24 +1,22 @@
 package com.stapelok.stapelok.restsevice.controllers;
 
+import com.stapelok.stapelok.models.Cart;
+import com.stapelok.stapelok.models.CartProd;
 import com.stapelok.stapelok.models.Products;
 import com.stapelok.stapelok.repositories.CartRepository;
 import com.stapelok.stapelok.repositories.ProductsRepository;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -27,6 +25,9 @@ import java.util.stream.Collectors;
 @Controller
 public class MainPageController {
 
+    private String prod_count_on_cart;
+
+    private int tot_price;
     @Autowired
     private ProductsRepository productsRepository;
 
@@ -37,13 +38,19 @@ public class MainPageController {
     private String getMainPage(Model model, @CookieValue(value = "userid",defaultValue = "newus") String usid, HttpServletResponse response, HttpServletRequest request){
         Iterable<Products> products=productsRepository.findAll();
         model.addAttribute("products",products);
-        System.out.println("usid="+usid);
         if(usid.equals("newus")){
-
-            int numuser= cartRepository.maxval()+1;
+            System.out.println("DATA BY MAXVAL"+cartRepository.maxval());
+            int numuser= Integer.parseInt(cartRepository.maxval())+1;
+            int cntProdInCart=Integer.parseInt(cartRepository.countProd(String.valueOf(numuser)));
+            model.addAttribute(cntProdInCart);
             Cookie cookie=new Cookie("userid",String.valueOf(numuser));
             response.addCookie(cookie);
             System.out.println("changedcookie="+numuser);
+        }
+        else{
+            int cntProdInCart=Integer.parseInt(cartRepository.countProd(usid));
+            prod_count_on_cart=String.valueOf(cntProdInCart);
+            model.addAttribute("countProd",cntProdInCart);
         }
         Cookie[] cookies=request.getCookies();
         if(cookies!=null){
@@ -63,8 +70,44 @@ public class MainPageController {
                 resArr.add(prod);
             }
         }
+        model.addAttribute("countProd",prod_count_on_cart);
         model.addAttribute("products",resArr);
         return "index";
+    }
+
+    @GetMapping("/add/{id}")
+    private String addToCart(@PathVariable(value = "id") long id, @CookieValue(value = "userid") String usid, @RequestParam(required = false) String quantity, Model model){
+        Date date=new Date();
+        System.out.println(quantity);
+        boolean check=false;
+        ArrayList<Cart> usProducts= cartRepository.arrCart(usid);
+        for(int i=0;i<usProducts.size();i++){
+            Cart cart=usProducts.get(i);
+            if(cart.getId_prod()==id&&((quantity==null)||Integer.parseInt(cart.getQuantity())>=Integer.parseInt(quantity))) {
+                check = true;
+                break;
+            }
+            else if(cart.getId_prod()==id&&Integer.parseInt(cart.getQuantity())<Integer.parseInt(quantity)){
+                cart.setQuantity(quantity);
+                cartRepository.save(cart);
+                check=true;
+                break;
+            }
+        }
+        if(quantity==null&&!check){
+            Cart cart=new Cart(Long.parseLong(usid),id,"1",date);
+            cartRepository.save(cart);
+        }
+        else if(quantity!=null&&!check){
+            Cart cart=new Cart(Long.parseLong(usid),id,quantity,date);
+            cartRepository.save(cart);
+        }
+
+        int cntProdInCart=Integer.parseInt(cartRepository.countProd(usid));
+        prod_count_on_cart=String.valueOf(cntProdInCart);
+        model.addAttribute("countProd",cntProdInCart);
+        System.out.println("PROD ADD");
+        return "redirect:/";
     }
 
     @GetMapping("/details/{id}")
@@ -93,12 +136,74 @@ public class MainPageController {
         }else {
             model.addAttribute("density",1);
         }
-
+        model.addAttribute("countProd",prod_count_on_cart);
         return "prod_details";
     }
     @GetMapping("/cart")
-    private String getCart(Model model){
+    private String getCart(@CookieValue(value = "userid") Cookie usid,Model model){
+        Iterable<Products> itProd=productsRepository.findAll();
+        ArrayList<Products> products= (ArrayList<Products>) itProd;
+        ArrayList<CartProd> resProd=new ArrayList<>();
+        ArrayList<Cart> carts=cartRepository.arrCart(usid.getValue());
+        int total_price=0;
+        for (Cart cart : carts) {
+            for (Products products1 : products) {
+                if (cart.getId_prod() == products1.getId()) {
+                    if(products1.getP_w_sale().equals("0")||products1.getP_w_sale()==null){
+                        int all_prod_price=Integer.parseInt(cart.getQuantity())*Integer.parseInt(products1.getPrice());
+                        CartProd cartProd=new CartProd(products1.getId(),(products1.getId()+"a"),cart.getId(),products1.getTitle(),
+                                String.valueOf(all_prod_price),cart.getQuantity(),products1.getImage1());
+                        resProd.add(cartProd);
+                        total_price+=all_prod_price;
+                    }else if(!products1.getP_w_sale().equals("0") ||products1.getP_w_sale()!=null){
+                        int all_prod_price=Integer.parseInt(cart.getQuantity())*Integer.parseInt(products1.getP_w_sale());
+                        CartProd cartProd=new CartProd(products1.getId(),(products1.getId()+"a"),cart.getId(),products1.getTitle(),
+                                String.valueOf(all_prod_price),cart.getQuantity(),products1.getImage1());
+                        resProd.add(cartProd);
+                        total_price+=all_prod_price;
+                    }
+
+                }
+            }
+        }
+        tot_price=total_price;
+        model.addAttribute("countProd",prod_count_on_cart);
+        model.addAttribute("products",resProd);
+        model.addAttribute("total_price",total_price);
         return "cart";
+    }
+    @GetMapping("/change-quantity/{id}")
+    private String changeQuantity(@PathVariable(value="id") long id, @CookieValue(value="userid") Cookie usid,Model model, @RequestParam String quantity
+            ,@RequestParam(name = "sign") String sign){
+        System.out.println("Sign "+sign+" Sign eq +"+sign.equals("+"));
+        ArrayList<Cart> carts=cartRepository.arrCart(usid.getValue());
+        for(int i=0;i<carts.size();i++){
+            Cart cart=carts.get(i);
+            if(cart.getId_prod()==id){
+                System.out.println(quantity);
+                int quant=Integer.parseInt(quantity);
+                if(quant>0){
+                    if(sign.equals("+")){
+                        quant=quant+1;
+                    }else if(sign.equals("-")&&quant>1){
+                        quant=quant-1;
+                    }
+                    cart.setQuantity(String.valueOf(quant));
+                    cartRepository.save(cart);
+
+                } else if (quant<0) {
+                    quant=-quant;
+                    if(sign.equals("+")){
+                        quant=quant+1;
+                    }else if(sign.equals("-")&&quant>1){
+                        quant=quant-1;
+                    }
+                    cart.setQuantity(String.valueOf(quant));
+                    cartRepository.save(cart);
+                }
+            }
+        }
+        return "redirect:/cart";
     }
 
 }
