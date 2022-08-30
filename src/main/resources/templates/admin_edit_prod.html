@@ -86,16 +86,27 @@
                             <input class="form-control" type="text" id="price" name="price" th:value="${el.price}"><br>
                             <label for="p_w_sale">Ціна зі знижкою (якщо немає знижки ставити 0):</label><br>
                             <input class="form-control" type="text" id="p_w_sale" name="p_w_sale" th:value="${el.p_w_sale}"><br>
+                            <hr>
                             <label for="imgInp1">Завантажити фото №1</label><br>
                             <input type='file' name="file1" accept="image/*" id="imgInp1"/><br><br>
                             <img th:src="@{'/image/'+${el.id}}" id="blah1" style="max-height: 250px "/><br><br>
+                            <div th:if="${el.image1!=null}">
+                                <a  class="btn btn-danger" th:href="'/delete-photo/'+${el.id}+'/'+${1}">Видалити фото №1</a>
+                            </div>
+                            <hr>
                             <label for="imgInp1">Завантажити фото №2</label><br>
                             <input type='file' name="file2" accept="image/*" id="imgInp2"/><br><br>
                             <img th:src="@{'/image2/'+${el.id}}" id="blah2" style="max-height: 250px "/><br><br>
+                            <div th:if="${el.image2!=null}">
+                                <a class="btn btn-danger" th:href="'/delete-photo/'+${el.id}+'/'+${2}">Видалити фото №2</a>
+                            </div>
+                            <hr>
                             <label for="imgInp1">Завантажити фото №3</label><br>
                             <input type='file' name="file3" accept="image/*" id="imgInp3"/><br><br>
                             <img th:src="@{'/image3/'+${el.id}}" id="blah3" style="max-height: 250px "/><br><br>
-
+                            <div th:if="${el.image3!=null}">
+                                <a class="btn btn-danger" th:href="'/delete-photo/'+${el.id}+'/'+${3}">Видалити фото №3</a>
+                            </div>
 
                             <script>
                                 function previewPhoto(inpfile, imgfile) {

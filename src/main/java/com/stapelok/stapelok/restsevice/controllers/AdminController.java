@@ -154,6 +154,24 @@ public class AdminController {
             IOUtils.copy(is,response.getOutputStream());
         }
     }
+    @GetMapping("/delete-photo/{id}/{numphoto}")
+    private String deleteImage(@PathVariable(value = "id") long id, @PathVariable(value = "numphoto") int num_photo){
+        Products products=productsRepository.findById(id).orElseThrow();
+        switch (num_photo) {
+            case 1 -> {
+                products.setImage1(null);
+            }
+            case 2 -> {
+                products.setImage2(null);
+            }
+            case 3 -> {
+                products.setImage3(null);
+            }
+        }
+        productsRepository.save(products);
+
+        return "redirect:/post-edit/"+id;
+    }
 
 
 }

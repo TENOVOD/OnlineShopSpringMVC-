@@ -40,9 +40,14 @@ public class MainPageController {
         model.addAttribute("products",products);
         if(usid.equals("newus")){
             System.out.println("DATA BY MAXVAL"+cartRepository.maxval());
-            int numuser= Integer.parseInt(cartRepository.maxval())+1;
+            int numuser=0;
+            if(cartRepository.maxval()==null){
+                numuser= 1;
+            }else{
+                numuser= Integer.parseInt(cartRepository.maxval())+1;
+            }
             int cntProdInCart=Integer.parseInt(cartRepository.countProd(String.valueOf(numuser)));
-            model.addAttribute(cntProdInCart);
+            model.addAttribute("countProd",cntProdInCart);
             Cookie cookie=new Cookie("userid",String.valueOf(numuser));
             response.addCookie(cookie);
             System.out.println("changedcookie="+numuser);
@@ -175,7 +180,7 @@ public class MainPageController {
     @GetMapping("/change-quantity/{id}")
     private String changeQuantity(@PathVariable(value="id") long id, @CookieValue(value="userid") Cookie usid,Model model, @RequestParam String quantity
             ,@RequestParam(name = "sign") String sign){
-        System.out.println("Sign "+sign+" Sign eq +"+sign.equals("+"));
+        //System.out.println("Sign "+sign+" Sign eq +"+sign.equals("+"));
         ArrayList<Cart> carts=cartRepository.arrCart(usid.getValue());
         for(int i=0;i<carts.size();i++){
             Cart cart=carts.get(i);
@@ -201,6 +206,17 @@ public class MainPageController {
                     cart.setQuantity(String.valueOf(quant));
                     cartRepository.save(cart);
                 }
+            }
+        }
+        return "redirect:/cart";
+    }
+    @GetMapping("/product-delete/{id}")
+    private String deleteFromCart(@PathVariable(value="id") long id,@CookieValue(value="userid") Cookie usid, Model model){
+        ArrayList<Cart> carts=cartRepository.arrCart(usid.getValue());
+        for(int i=0;i<carts.size();i++){
+            if(carts.get(i).getId_prod()==id){
+                cartRepository.delete(carts.get(i));
+                break;
             }
         }
         return "redirect:/cart";

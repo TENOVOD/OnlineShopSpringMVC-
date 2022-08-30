@@ -13,7 +13,7 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/css/styles.css" rel="stylesheet"/>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <span th:insert="blocks/header::header"></span>
 <section class="py-4">
     <div class="container px-4 px-lg-5 mt-1">
@@ -39,27 +39,36 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <div class=" pl-0 flex-sm-col col-auto  my-auto "><b><span id="price"
-                                                                                       th:text="${el.price}"></span>&#x20b4;</b>
+                            <div class=" pl-0 col flex-sm-col col-auto pr-0 d-flex flex-row-reverse  ">
+                                <a th:href="'/product-delete/'+${el.product_id}" style="text-decoration: none; color: black;"  >&#x2715;</a>
+                            </div>
+                            <div>
+                                <br>
+                                <br>
+                            </div>
+                            <div class=" pl-0 col flex-sm-col col-auto pt-5  ">
+                                <b><span id="price" th:text="${el.price}"></span>&#x20b4;</b>
                             </div>
                         </div>
 
 
                         <hr class="my-2">
                     </div>
-                    <div class="row ">
+                    <div class="row pt-3">
                         <div class="col">
                             <div class="row justify-content-between">
                                 <div class="col-4"><p><b>Всього</b></p></div>
                                 <div class="flex-sm-col col-auto"><p class="mb-1"><b><span
                                         th:text="${total_price}"></span>&#x20b4;</b></p></div>
                             </div>
-                            <hr class="my-0">
+
                         </div>
+
+                        <hr class="my-2">
                     </div>
                     <div class="row mb-4 mt-4 ">
                         <div class="col-md-12 text-center ">
-                            <button type="button" class="btn btn-outline-success btn-lg">Оформити замовлення
+                            <button type="button" class="btn btn-outline-success ">Оформити замовлення
                             </button>
                         </div>
                     </div>
@@ -69,7 +78,7 @@
     </div>
     </div>
 </section>
-<footer th:insert="blocks/footer.html::footer"></footer>
+<footer th:insert="blocks/footer.html::footer" class="mt-auto"></footer>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
