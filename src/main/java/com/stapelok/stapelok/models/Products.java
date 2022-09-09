@@ -1,5 +1,7 @@
 package com.stapelok.stapelok.models;
 
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Date;
@@ -63,6 +65,25 @@ public class Products {
         this.type = type;
         this.title = title;
         this.description=description;
+        this.price = price;
+        this.p_w_sale = p_w_sale;
+        this.stocks = stocks;
+        this.stock_status = stock_status;
+        this.date = date;
+        this.country = country;
+        this.composition = composition;
+        this.width = width;
+        this.density = density;
+        this.image1 = image1;
+        this.image2 = image2;
+        this.image3 = image3;
+    }
+
+    public Products(Long id, String type, String title, String description, String price, String p_w_sale, String stocks, String stock_status, Date date, String country, String composition, String width, String density, byte[] image1, byte[] image2, byte[] image3) {
+        this.id = id;
+        this.type = type;
+        this.title = title;
+        this.description = description;
         this.price = price;
         this.p_w_sale = p_w_sale;
         this.stocks = stocks;

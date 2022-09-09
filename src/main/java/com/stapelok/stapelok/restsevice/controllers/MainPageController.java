@@ -5,7 +5,12 @@ import com.stapelok.stapelok.models.CartProd;
 import com.stapelok.stapelok.models.Products;
 import com.stapelok.stapelok.repositories.CartRepository;
 import com.stapelok.stapelok.repositories.ProductsRepository;
+import com.stapelok.stapelok.repositories.UserRepository;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -16,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,15 +42,24 @@ public class MainPageController {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/")
     private String getMainPage(Model model, @CookieValue(value = "userid",defaultValue = "newus") String usid, HttpServletResponse response, HttpServletRequest request){
+        model.addAttribute("checkLogin",getLoginStatus());
         Iterable<Products> products=productsRepository.findAll();
         model.addAttribute("products",products);
         if(usid.equals("newus")){
             System.out.println("DATA BY MAXVAL"+cartRepository.maxval());
-            int numuser= Integer.parseInt(cartRepository.maxval())+1;
+            long numuser=0;
+            if(cartRepository.maxval()==null){
+                numuser= 1;
+            }else{
+                numuser= cartRepository.maxval()+1;
+            }
             int cntProdInCart=Integer.parseInt(cartRepository.countProd(String.valueOf(numuser)));
-            model.addAttribute(cntProdInCart);
+            model.addAttribute("countProd",cntProdInCart);
             Cookie cookie=new Cookie("userid",String.valueOf(numuser));
             response.addCookie(cookie);
             System.out.println("changedcookie="+numuser);
@@ -61,6 +78,9 @@ public class MainPageController {
     }
     @GetMapping("/category/{n}")
     private String getFiltProd(@PathVariable(value = "n") int number,Model model){
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        boolean checkLoginUser= userRepository.findByEmail(auth.getName()).isEmpty();
+        model.addAttribute("checkLogin",checkLoginUser);
         Iterable<Products> products=productsRepository.findAll();
         ArrayList<Products> arrProd= (ArrayList<Products>) products;
         ArrayList<Products> resArr=new ArrayList<>();
@@ -77,6 +97,9 @@ public class MainPageController {
 
     @GetMapping("/add/{id}")
     private String addToCart(@PathVariable(value = "id") long id, @CookieValue(value = "userid") String usid, @RequestParam(required = false) String quantity, Model model){
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        boolean checkLoginUser= userRepository.findByEmail(auth.getName()).isEmpty();
+        model.addAttribute("checkLogin",checkLoginUser);
         Date date=new Date();
         System.out.println(quantity);
         boolean check=false;
@@ -112,6 +135,7 @@ public class MainPageController {
 
     @GetMapping("/details/{id}")
     private String getDetails(@PathVariable(value="id") long id,Model model){
+        model.addAttribute("checkLogin",getLoginStatus());
         Optional<Products> product=productsRepository.findById(id);
         ArrayList<Products> arrProd=new ArrayList<>();
         product.ifPresent(arrProd::add);
@@ -141,6 +165,7 @@ public class MainPageController {
     }
     @GetMapping("/cart")
     private String getCart(@CookieValue(value = "userid") Cookie usid,Model model){
+        model.addAttribute("checkLogin",getLoginStatus());
         Iterable<Products> itProd=productsRepository.findAll();
         ArrayList<Products> products= (ArrayList<Products>) itProd;
         ArrayList<CartProd> resProd=new ArrayList<>();
@@ -175,7 +200,7 @@ public class MainPageController {
     @GetMapping("/change-quantity/{id}")
     private String changeQuantity(@PathVariable(value="id") long id, @CookieValue(value="userid") Cookie usid,Model model, @RequestParam String quantity
             ,@RequestParam(name = "sign") String sign){
-        System.out.println("Sign "+sign+" Sign eq +"+sign.equals("+"));
+        //System.out.println("Sign "+sign+" Sign eq +"+sign.equals("+"));
         ArrayList<Cart> carts=cartRepository.arrCart(usid.getValue());
         for(int i=0;i<carts.size();i++){
             Cart cart=carts.get(i);
@@ -204,6 +229,51 @@ public class MainPageController {
             }
         }
         return "redirect:/cart";
+    }
+    @GetMapping("/image/{id}")
+    private void showFirstImage(@PathVariable long id, HttpServletResponse response) throws IOException {
+        response.setContentType("image/jpg");
+        Optional<Products> products=productsRepository.findById(id);
+        if(products.get().getImage1()!=null){
+            InputStream is=new ByteArrayInputStream(products.get().getImage1());
+            IOUtils.copy(is,response.getOutputStream());
+        }
+    }
+
+    @GetMapping("/image2/{id}")
+    private void showSecondImage(@PathVariable long id, HttpServletResponse response) throws IOException{
+        response.setContentType("image/jpg");
+        Optional<Products> products=productsRepository.findById(id);
+        if(products.get().getImage2()!=null){
+            InputStream is=new ByteArrayInputStream(products.get().getImage2());
+            IOUtils.copy(is,response.getOutputStream());
+
+        }
+    }
+    @GetMapping("/image3/{id}")
+    private void showThirdImage(@PathVariable long id, HttpServletResponse response) throws IOException{
+        response.setContentType("image/jpg");
+        Optional<Products> products=productsRepository.findById(id);
+        if(products.get().getImage3()!=null){
+            InputStream is=new ByteArrayInputStream(products.get().getImage3());
+            IOUtils.copy(is,response.getOutputStream());
+        }
+    }
+    @GetMapping("/product-delete/{id}")
+    private String deleteFromCart(@PathVariable(value="id") long id,@CookieValue(value="userid") Cookie usid, Model model){
+        ArrayList<Cart> carts=cartRepository.arrCart(usid.getValue());
+        for(int i=0;i<carts.size();i++){
+            if(carts.get(i).getId_prod()==id){
+                cartRepository.delete(carts.get(i));
+                break;
+            }
+        }
+        return "redirect:/cart";
+    }
+
+    boolean getLoginStatus(){
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.findByEmail(auth.getName()).isEmpty();
     }
 
 }

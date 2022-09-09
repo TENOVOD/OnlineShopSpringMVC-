@@ -13,12 +13,16 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="/css/styles.css" rel="stylesheet" />
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <!-- Navigation-->
-        <span th:insert="blocks/header::header">
 
-        </span>
         <!-- Header-->
+        <div th:if="${checkLogin==false}">
+             <span th:insert="blocks/user_header::header"></span>
+        </div>
+        <div th:unless="${checkLogin==false}">
+             <span th:insert="blocks/header::header"></span>
+        </div>
         <header class="bg-image py-5" style="background-image:url('/picture/pudr-silk.jpg')">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
@@ -65,7 +69,7 @@
             </div>
         </section>
         <!-- Footer-->
-        <footer th:insert="blocks/footer.html::footer"></footer>
+        <footer th:insert="blocks/footer.html::footer" class="mt-auto"></footer>
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->

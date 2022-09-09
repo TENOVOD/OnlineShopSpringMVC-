@@ -1,16 +1,19 @@
 package com.stapelok.stapelok.restsevice.controllers;
 
 import com.stapelok.stapelok.models.Products;
+import com.stapelok.stapelok.repositories.CartRepository;
 import com.stapelok.stapelok.repositories.ProductsRepository;
+import com.stapelok.stapelok.repositories.UserRepository;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -22,13 +25,15 @@ import java.util.Date;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
 
 
     //connect models repo and we can use db methods
     @Autowired
-    private ProductsRepository productsRepository;
+    private  ProductsRepository productsRepository;
+
 
 
     @GetMapping("/admin_main_page")
@@ -84,7 +89,7 @@ public class AdminController {
         Products products=new Products(p_type,title,description,price,"0",stocks,"В наявності",date,country,composition,width,density,photo1,photo2,photo3);
         productsRepository.save(products);
 
-        return  "redirect:/add_prod"; //поміняти на силку до показу товару з кнопкою редагування(admin page)
+        return  "redirect:/admin/add_prod";
 
     }
     @PostMapping("/post-edit/{id}")
@@ -123,36 +128,25 @@ public class AdminController {
         product.setType(p_type);
         productsRepository.save(product);
 
-        return "redirect:/admin_main_page";
+        return "redirect:/admin/admin_main_page";
     }
-    @GetMapping("/image/{id}")
-    private void showFirstImage(@PathVariable long id, HttpServletResponse response) throws IOException{
-        response.setContentType("image/jpg");
-        Optional<Products> products=productsRepository.findById(id);
-        if(products.get().getImage1()!=null){
-            InputStream is=new ByteArrayInputStream(products.get().getImage1());
-            IOUtils.copy(is,response.getOutputStream());
+    @GetMapping("/delete-photo/{id}/{numphoto}")
+    private String deleteImage(@PathVariable(value = "id") long id, @PathVariable(value = "numphoto") int num_photo){
+        Products products=productsRepository.findById(id).orElseThrow();
+        switch (num_photo) {
+            case 1 -> {
+                products.setImage1(null);
+            }
+            case 2 -> {
+                products.setImage2(null);
+            }
+            case 3 -> {
+                products.setImage3(null);
+            }
         }
-    }
+        productsRepository.save(products);
 
-    @GetMapping("/image2/{id}")
-    private void showSecondImage(@PathVariable long id, HttpServletResponse response) throws IOException{
-        response.setContentType("image/jpg");
-        Optional<Products> products=productsRepository.findById(id);
-        if(products.get().getImage2()!=null){
-            InputStream is=new ByteArrayInputStream(products.get().getImage2());
-            IOUtils.copy(is,response.getOutputStream());
-
-        }
-    }
-    @GetMapping("/image3/{id}")
-    private void showThirdImage(@PathVariable long id, HttpServletResponse response) throws IOException{
-        response.setContentType("image/jpg");
-        Optional<Products> products=productsRepository.findById(id);
-        if(products.get().getImage3()!=null){
-            InputStream is=new ByteArrayInputStream(products.get().getImage3());
-            IOUtils.copy(is,response.getOutputStream());
-        }
+        return "redirect:/admin/post-edit/"+id;
     }
 
 
