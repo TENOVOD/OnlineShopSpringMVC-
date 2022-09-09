@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+  <title></title>
+  <!-- Favicon-->
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+  <!-- Bootstrap icons-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+  <!-- Core theme CSS (includes Bootstrap)-->
+  <link href="/css/styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header th:insert="blocks/admin_header.html"></header>
+<section class="py-4">
+  <div class="container px-4 px-lg-5 mt-5">
+    <div class="mx-auto">
+      <div class="col mb-5">
+        <div class="card h-100  p-5" th:each="el:${order}">
+          <a style="font-size: 1.4em; font-weight: bold; margin-bottom: 10px">Замовлення: №<span th:text="${el.id}"></span></a>
+          <div  th:each="prOr:${preOrderProducts}">
+            <div th:each="prod:${products}">
+              <div class="row" th:if="${prOr.id_prod==prod.id}">
+                <div class="col-auto mr-auto">
+                  <img class=" img-fluid " th:src="@{'/image/'+${prOr.id_prod}}"
+                       style="  height: 150px ;width:auto ">
+                </div>
+                <div class="col">
+                  <div><a style="color: black; text-decoration: none; " th:href="'/details/'+${prOr.id_prod}" class="mb-0" th:text="${prod.title}"></a></div>
+                </div>
+                <div class="col">
+                  <div class=" pl-0 flex-sm-col col-auto  my-auto ">
+                    <p>Кількість: <b th:text="${prOr.count}"></b></p>
+                  </div>
+                </div>
+                <div class="col-auto">
+
+                  <b><span id="price" th:text="${prOr.price}*${prOr.count}"></span>&#x20b4;</b>
+
+                </div>
+                <hr class="my-2">
+              </div>
+            </div>
+          </div>
+          <div class="row ">
+            <div class="col">
+              <div class="row justify-content-between">
+                <div class="col-4"><p><b>Всього</b></p></div>
+                <div class="flex-sm-col col-auto"><p class="mb-1"><b><span id="total_price"
+                                                                           th:text="${el.total_sum}"></span>&#x20b4;</b></p></div>
+              </div>
+              <hr class="my-0">
+            </div>
+          </div>
+          <form class="form-group" name="form" id="form" enctype="multipart/form-data"
+                method="post">
+            <div class="form-group ">
+              <br><b>Статус замовлення:</b><br>
+              <div class="mb-1">
+                <input type="radio" id="waitCall" name="status" value="Очікуйте дзвінка" th:checked="${el.status=='Очікуйте дзвінка'}">
+                <label for="waitCall">Очікуйте дзвінка &nbsp&nbsp </label>
+                <input type="radio" id="awaitShipment" name="status" value="Підтвердженно"  th:checked="${el.status=='Підтвердженно'}">
+                <label for="awaitShipment">Підтвердженно &nbsp&nbsp </label>
+                <input type="radio" id="delivered" name="status" value="Відправленно"  th:checked="${el.status=='Відправленно'}">
+                <label for="delivered">Відправленно &nbsp&nbsp </label>
+                <input type="radio" id="abolition" name="status" value="Відміна"  th:checked="${el.status=='Відміна'}">
+                <label for="abolition">Відміна &nbsp&nbsp </label>
+              </div>
+
+              <br><label for="first_name">Ім'я:</label><br>
+              <input class="form-control" type="text" id="first_name" name="first_name" th:value="${el.name}"><br>
+              <label for="last_name">Прізвище:</label><br>
+              <input class="form-control" type="text" id="last_name" name="last_name" th:value="${el.last_name}"><br>
+              <label for="middle_name">По-батькові:</label><br>
+              <input class="form-control" type="text" id="middle_name" name="middle_name" th:value="${el.middle_name}"><br>
+              <label for="address">Адреса:</label><br>
+              <input class="form-control" type="text" id="address" name="address" th:value="${el.address}"><br>
+              <label for="phone_num">Номер телефону отримувача:</label><br>
+              <input class="form-control" type="text" id="phone_num" name="phone_num" th:value="${el.phone_num}"><br>
+              <label>Служба доставки:</label><br>
+              <div class="mb-1">
+                <input type="radio" id="nova_poshta" name="delivery" value="1" th:checked="${el.delivery=='1'}">
+                <label for="nova_poshta">Нова пошта</label><br>
+                <input type="radio" id="ukr_poshta" name="delivery" value="2" th:checked="${el.delivery=='2'}">
+                <label for="ukr_poshta">Укрпошта</label>
+              </div>
+
+            </div>
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+              <button type="submit" value="Upload" class="btn btn-outline-dark mt-auto">Змінити данні
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Footer-->
+<footer th:insert="blocks/footer.html::footer"></footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

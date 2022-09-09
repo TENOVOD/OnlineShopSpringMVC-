@@ -8,6 +8,7 @@ public class CartProd {
 
     private String script_id;
 
+    private int all_length;
 
     private Long id_cart;
 
@@ -18,6 +19,14 @@ public class CartProd {
     private String count;
 
     private byte[] image;
+
+    public int getAll_length() {
+        return all_length;
+    }
+
+    public void setAll_length(int all_length) {
+        this.all_length = all_length;
+    }
 
     public String getScript_id() {
         return script_id;
@@ -35,9 +44,10 @@ public class CartProd {
         this.product_id = product_id;
     }
 
-    public CartProd(Long product_id, String script_id, Long id_cart, String name, String price, String count, byte[] image) {
+    public CartProd(Long product_id, String script_id, int all_length, Long id_cart, String name, String price, String count, byte[] image) {
         this.product_id = product_id;
         this.script_id = script_id;
+        this.all_length = all_length;
         this.id_cart = id_cart;
         this.name = name;
         this.price = price;

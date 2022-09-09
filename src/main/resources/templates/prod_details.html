@@ -19,10 +19,10 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 <div th:if="${checkLogin==false}">
-             <span th:insert="blocks/user_header::header"></span>
+    <span th:insert="blocks/user_header::header"></span>
 </div>
 <div th:unless="${checkLogin==false}">
-             <span th:insert="blocks/header::header"></span>
+    <span th:insert="blocks/header::header"></span>
 </div>
 <section class="py-4">
     <div class="container px-4 px-lg-5 mt-1">

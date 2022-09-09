@@ -1,25 +1,17 @@
 package com.stapelok.stapelok.restsevice.controllers;
 
+import com.stapelok.stapelok.models.Order;
+import com.stapelok.stapelok.models.PreOrder;
 import com.stapelok.stapelok.models.Products;
-import com.stapelok.stapelok.repositories.CartRepository;
-import com.stapelok.stapelok.repositories.ProductsRepository;
-import com.stapelok.stapelok.repositories.UserRepository;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import com.stapelok.stapelok.repositories.*;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -34,7 +26,10 @@ public class AdminController {
     @Autowired
     private  ProductsRepository productsRepository;
 
-
+    @Autowired
+    private PreOrderRepository preOrderRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     @GetMapping("/admin_main_page")
     public String getAdminMainPage(Model model){
@@ -148,6 +143,71 @@ public class AdminController {
 
         return "redirect:/admin/post-edit/"+id;
     }
+
+    @GetMapping("/orders")
+    public  String getOrders(Model model){
+        ArrayList<Order> arrayListOrders= (ArrayList<Order>) orderRepository.findAll();
+        ArrayList<Order> waitCallList=new ArrayList<>();
+        ArrayList<Order> awaitShipmentList=new ArrayList<>();
+        ArrayList<Order> deliverList=new ArrayList<>();
+        ArrayList<Order> abolition=new ArrayList<>();
+        for(int i=0;i<arrayListOrders.size();i++){
+            if(arrayListOrders.get(i).getStatus().equals("Очікуйте дзвінка")){
+                waitCallList.add(arrayListOrders.get(i));
+            }else if(arrayListOrders.get(i).getStatus().equals("Підтвердженно")){
+                awaitShipmentList.add(arrayListOrders.get(i));
+            }else if(arrayListOrders.get(i).getStatus().equals("Відправленно")){
+                deliverList.add(arrayListOrders.get(i));
+            }else if(arrayListOrders.get(i).getStatus().equals("Відміна")){
+                abolition.add(arrayListOrders.get(i));
+            }
+        }
+        arrayListOrders.clear();
+        arrayListOrders.addAll(waitCallList);
+        arrayListOrders.addAll(awaitShipmentList);
+        arrayListOrders.addAll(deliverList);
+        arrayListOrders.addAll(abolition);
+        model.addAttribute("orders",arrayListOrders);
+        ArrayList<PreOrder> preOrderArrayList=(ArrayList<PreOrder>) preOrderRepository.findAll();
+        model.addAttribute("products",preOrderArrayList);
+        return "/orders";
+    }
+    @GetMapping("/order_details/{id}")
+    public String getOrder_details(Model model,@PathVariable long id){
+        Optional<Order> order=orderRepository.findById(id);
+        ArrayList<Order> arrayList=new ArrayList<>();
+        order.ifPresent(arrayList::add);
+        System.out.println( order);
+        model.addAttribute("order",arrayList);
+        ArrayList<PreOrder> preOrderArrayList=preOrderRepository.getPreOrderByOrder_id(id);
+        model.addAttribute("preOrderProducts",preOrderArrayList);
+        ArrayList<Products> productsArrayList=new ArrayList<>();
+        for(int i=0;i<preOrderArrayList.size();i++){
+            Optional<Products> products=  productsRepository.findById(preOrderArrayList.get(i).getId_prod());
+            productsArrayList.add(products.get());
+        }
+        model.addAttribute("products",productsArrayList);
+        return "/order_details";
+    }
+    @PostMapping("/order_details/{id}")
+    private String setOrderNewData(Model model,@PathVariable long id,@RequestParam(name = "status") String status,
+                                   @RequestParam String first_name, @RequestParam String last_name,@RequestParam String middle_name,
+                                   @RequestParam String address, @RequestParam String phone_num, @RequestParam(name="delivery") String delivery){
+        Optional<Order> opOrder=orderRepository.findById(id);
+        ArrayList<Order> arrayList=new ArrayList<>();
+        opOrder.ifPresent(arrayList::add);
+        Order order=arrayList.get(0);
+        order.setStatus(status);
+        order.setName(first_name);
+        order.setLast_name(last_name);
+        order.setMiddle_name(middle_name);
+        order.setAddress(address);
+        order.setPhone_num(phone_num);
+        order.setDelivery(delivery);
+        orderRepository.save(order);
+        return getOrders(model);
+    }
+
 
 
 }

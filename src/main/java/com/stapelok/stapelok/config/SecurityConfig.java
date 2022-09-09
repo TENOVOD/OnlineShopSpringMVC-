@@ -1,6 +1,5 @@
 package com.stapelok.stapelok.config;
 
-import com.stapelok.stapelok.models.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +19,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends  WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
@@ -35,7 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/auth/registration").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority("admin:all")
+                .antMatchers("/user/**").hasAnyAuthority("users:all")
                 .and()
                 .formLogin()
                 .loginPage("/auth/login").permitAll()

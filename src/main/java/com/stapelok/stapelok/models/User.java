@@ -8,19 +8,20 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "email")
     private String email;
     @Column(name = "password")
     private String password;
     @Column(name = "first_name")
-    private String firstName;
+    private String first_name;
     @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name="surname")
-    private  String surname;
+    private String last_name;
+    @Column(name="phone")
+    private String phoneNumber;
+    @Column(name= "middle_name")
+    private  String middle_name;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role")
     private Role role;
@@ -28,24 +29,31 @@ public class User {
     @Column(name = "status")
     private Status status;
 
-    @Enumerated(value=EnumType.STRING)
-    @Column(name="loginstat")
-    private LoginStat loginstat;
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
 
-    public String getSurname() {
-        return surname;
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
     }
 
-    public LoginStat getLoginstat() {
-        return loginstat;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setLoginstat(LoginStat loginstat) {
-        this.loginstat = loginstat;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getMiddle_name() {
+        return middle_name;
+    }
+
+    public void setMiddle_name(String middle_name) {
+        this.middle_name = middle_name;
     }
 
     public Long getId() {
@@ -72,20 +80,20 @@ public class User {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLast_name() {
+        return last_name;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 
     public Role getRole() {
@@ -107,27 +115,27 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String email, String password, String firstName, String lastName, String surname, Role role, Status status, LoginStat loginstat) {
+    public User(Long id, String email, String password, String first_name, String last_name, String phoneNumber, String middle_name, Role role, Status status) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.surname = surname;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.phoneNumber = phoneNumber;
+        this.middle_name = middle_name;
         this.role = role;
         this.status = status;
-        this.loginstat = loginstat;
     }
 
-    public User(String email, String password, String firstName, String lastName, String surname, Role role, Status status, LoginStat loginstat) {
+    public User(String email, String password, String first_name, String last_name, String phoneNumber, String middle_name, Role role, Status status) {
         this.email = email;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.surname = surname;
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.phoneNumber = phoneNumber;
+        this.middle_name = middle_name;
         this.role = role;
         this.status = status;
-        this.loginstat = loginstat;
     }
 
     @Override
@@ -136,12 +144,12 @@ public class User {
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", surname='" + surname + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", middle_name='" + middle_name + '\'' +
                 ", role=" + role +
                 ", status=" + status +
-                ", loginstat=" + loginstat +
                 '}';
     }
 }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title></title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico"/>
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet"/>
+</head>
+<body>
+<header th:insert="blocks/user_header.html"></header>
+<section class="py-4">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="mx-auto">
+            <div class="col mb-5">
+                <div class="card h-100  p-5" th:each="el:${user}">
+                    <h4>Змінити основні дані:</h4>
+                    <form class="form-group" name="form" id="main_info_form" method="post" action="/user/change-info">
+                        <div class="form-group ">
+                            <label for="first_name">Ім'я:</label><br>
+                            <input class="form-control" type="text" id="first_name" name="first_name" th:value="${el.first_name}"><br>
+                            <label for="last_name">Прізвище:</label><br>
+                            <input class="form-control" type="text" id="last_name" name="last_name" th:value="${el.last_name}"><br>
+                            <label for="middle_name">По-батькові:</label><br>
+                            <input class="form-control" type="text" id="middle_name" name="middle_name" th:value="${el.middle_name}"><br>
+                            <label for="phone_num">Номер телефону:</label><br>
+                            <input class="form-control" type="text" id="phone_num" name="phone_num" th:value="${el.phoneNumber}"><br>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+                            <button type="submit" value="Upload" class="btn btn-outline-dark mt-auto">Змінити данні
+                            </button>
+                        </div>
+                    </form>
+                    <h4 class="mt-4">Змінити пароль:</h4>
+                    <form class="form-group" name="form" id="password_form" method="post" action="/user/change-password">
+                        <div class="form-group ">
+                            <div th:if="${success=='1'}">
+                                <p style="color: green">Пароль успішно змінено!</p>
+                            </div>
+                            <div th:if="${incorrect_old_password=='1'}">
+                                <p style="color: red;">*ваш поточний пароль невірний</p>
+                            </div>
+                            <label for="old_password">Введіть старий пароль:</label><br>
+                            <input class="form-control" type="password" id="old_password" name="old_password"><br>
+                            <div th:if="${incorrect_repeat_password=='1'}">
+                                <p style="color: red">*паролі не збігаються</p>
+                            </div>
+                            <label for="new_password">Введіть новий пароль:</label><br>
+                            <input class="form-control" type="password" id="new_password" name="new_password"><br>
+                            <label for="repeat_password">Повторіть новий пароль:</label><br>
+                            <input class="form-control" type="password" id="repeat_password" name="repeat_password"><br>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent text-center">
+                            <button type="submit" value="Upload" class="btn btn-outline-dark mt-auto">Змінити пароль
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer-->
+<footer th:insert="blocks/footer.html::footer"></footer>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
