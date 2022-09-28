@@ -66,9 +66,11 @@
                             <form class="mt-1" th:action="'/add/'+${el.id}" method="get">
                                 <input type="number" id="quantity" name="quantity" class="form-control" min="1" style="width: 90px;" value="1">
                                 <div th:if="${el.stock_status!='Закінчився'}">
-
+                                    <button type="submit" class="btn btn-outline-success mt-1 mb-2">У кошик!</button>
                                 </div>
-                                <button type="submit" class="btn btn-outline-success mt-1 mb-2">У кошик!</button>
+                                <div th:if="${el.stock_status=='Закінчився'}">
+                                    <button type="submit" class="btn btn-outline-success mt-1 mb-2 disabled">У кошик!</button>
+                                </div>
                             </form>
                             <div th:if="${description==1}">
                                 <b><p>Опис: </b><span th:text="${el.description}"></span></p>

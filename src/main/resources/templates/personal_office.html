@@ -27,34 +27,38 @@
 <section class="py-4">
     <div class="container px-4 px-lg-5 mt-5">
         <h1 class="justify-content-center" th:text="${fullName}"></h1>
-        <a style="color: black" href="/user/edit-profile">Змінити персональні дані</a>
-        <h3>Ваші замовлення:</h3>
-        <div th:each="el:${orders}" class="card p-2 mb-4">
-            <div class="row">
-                <div class="col">
-                    <b>№ <span th:text="${el.id}"></span></b>
-                </div>
-                <div class="col flex-sm-col col-auto pr-0 d-flex flex-row-reverse ">
-                    <p th:text="${el.date}"></p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div th:if="${el.status=='Очікуйте дзвінка'}">
-                        <p th:text="${el.status}" style="color: orange"></p>
+        <a style="color: black" href="/user/edit-profile">Змінити персональні дані</a><br>
+        <div th:if="${orders==null}">
+            <h3>Нажаль у Вас немає замовлень</h3>
+        </div>
+        <div th:if="${orders!=null}">
+            <h3>Ваші замовлення:</h3>
+            <div th:each="el:${orders}" class="card p-2 mb-4">
+                <div class="row">
+                    <div class="col">
+                        <b>№ <span th:text="${el.id}"></span></b>
                     </div>
-                    <div th:if="${el.status=='Підтвердженно'}">
-                        <p th:text="${el.status}" style="color: dodgerblue"></p>
-                    </div>
-                    <div th:if="${el.status=='Відправленно'}">
-                        <p th:text="${el.status}" style="color: green"></p>
-                    </div>
-                    <div th:if="${el.status=='Відміна'}">
-                        <p th:text="${el.status}" style="color: red"></p>
+                    <div class="col flex-sm-col col-auto pr-0 d-flex flex-row-reverse ">
+                        <p th:text="${el.date}"></p>
                     </div>
                 </div>
-            </div>
-            <div class="row pb-2 " th:each="prod:${products}" th:if="${prod.order_id}==${el.id}">
+                <div class="row">
+                    <div class="col">
+                        <div th:if="${el.status=='Очікуйте дзвінка'}">
+                            <p th:text="${el.status}" style="color: orange"></p>
+                        </div>
+                        <div th:if="${el.status=='Підтвердженно'}">
+                            <p th:text="${el.status}" style="color: dodgerblue"></p>
+                        </div>
+                        <div th:if="${el.status=='Відправленно'}">
+                            <p th:text="${el.status}" style="color: green"></p>
+                        </div>
+                        <div th:if="${el.status=='Відміна'}">
+                            <p th:text="${el.status}" style="color: red"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pb-2 " th:each="prod:${products}" th:if="${prod.order_id}==${el.id}">
 
                     <div class="col">
                         <img class=" img-fluid " th:src="@{'/image/'+${prod.id_prod}}"
@@ -70,14 +74,16 @@
                     </div>
 
 
-            </div>
-            <div class="row">
-                <div class="col align-self-end d-flex flex-row-reverse ">
-                   <p>Всього: <b><span th:text="${el.total_sum}"></span> &#x20b4;</b></p>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col align-self-end d-flex flex-row-reverse ">
+                        <p>Всього: <b><span th:text="${el.total_sum}"></span> &#x20b4;</b></p>
+                    </div>
+                </div>
 
+            </div>
         </div>
+
     </div>
 </section>
 <!-- Footer-->

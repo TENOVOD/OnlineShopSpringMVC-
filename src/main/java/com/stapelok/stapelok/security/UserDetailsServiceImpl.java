@@ -1,8 +1,6 @@
 package com.stapelok.stapelok.security;
 
 
-import com.stapelok.stapelok.config.SecurityConfig;
-import com.stapelok.stapelok.models.LoginStat;
 import com.stapelok.stapelok.models.User;
 import com.stapelok.stapelok.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

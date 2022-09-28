@@ -46,8 +46,19 @@ public class MainPageController {
     @GetMapping("/")
     private String getMainPage(Model model, @CookieValue(value = "userid", defaultValue = "newus") String usid, HttpServletResponse response, HttpServletRequest request) {
         model.addAttribute("checkLogin", getLoginStatus());
-        Iterable<Products> products = productsRepository.findAll();
-        model.addAttribute("products", products);
+        Iterable<Products> iterableProducts = productsRepository.findAll();
+        ArrayList<Products> productsArrayList= (ArrayList<Products>) iterableProducts;
+        for(int i=0; i<productsArrayList.size();i++){
+           Products product=productsArrayList.get(i);
+           if(Double.parseDouble(product.getStocks()) <10&&Double.parseDouble(product.getStocks())>1){
+               product.setStock_status("Закінчується");
+               productsRepository.save(product);
+           } else if (Double.parseDouble(product.getStocks())<1) {
+               product.setStock_status("Закінчився");
+               productsRepository.save(product);
+           }
+        }
+        model.addAttribute("products", productsArrayList);
         if (usid.equals("newus")) {
             System.out.println("DATA BY MAXVAL" + cartRepository.maxval());
             long numuser = 0;
@@ -195,6 +206,9 @@ public class MainPageController {
         }
         tot_price = total_price;
         model.addAttribute("countProd", prod_count_on_cart);
+        if(resProd.isEmpty()){
+            resProd=null;
+        }
         model.addAttribute("products", resProd);
         model.addAttribute("total_price", total_price);
         return "cart";
@@ -336,6 +350,8 @@ public class MainPageController {
         return "placing_order";
     }
 
+
+
     @PostMapping("/order")
     public String createOrder(@RequestParam String first_name, @RequestParam String last_name,
                               @RequestParam String surname,@RequestParam String phone_num,
@@ -403,8 +419,17 @@ public class MainPageController {
                 }
                 productsRepository.save(products.get());
             }
-
+            model.addAttribute("user_name",first_name);
+            model.addAttribute("orders_num",order.getId());
+            model.addAttribute("checkLogin", getLoginStatus());
         }
-        return getMainPage(model,usid.getValue(),response,request);
+        return getSuccessOrderPage(model);
     }
+
+    @GetMapping("/success_oder")
+    public String getSuccessOrderPage(Model model){
+        return "thanks_for_order";
+    }
+
+
 }

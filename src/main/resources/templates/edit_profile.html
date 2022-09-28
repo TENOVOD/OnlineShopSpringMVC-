@@ -23,6 +23,7 @@
                     <h4>Змінити основні дані:</h4>
                     <form class="form-group" name="form" id="main_info_form" method="post" action="/user/change-info">
                         <div class="form-group ">
+                            <p style="color: green" th:text="${success_edit}"></p>
                             <label for="first_name">Ім'я:</label><br>
                             <input class="form-control" type="text" id="first_name" name="first_name" th:value="${el.first_name}"><br>
                             <label for="last_name">Прізвище:</label><br>

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 @Controller
@@ -41,6 +42,10 @@ public class UserController {
         model.addAttribute("fullName",fullName);
         model.addAttribute("user",user);
         ArrayList<Order> arrayList=orderRepository.getOrdersByUserEmail(auth.getName());
+        Collections.reverse(arrayList);
+        if(arrayList.isEmpty()){
+            arrayList=null;
+        }
         model.addAttribute("orders",arrayList);
         ArrayList<PreOrder> arrayFilterEmailPreOrder=preOrderRepository.getPreOrdersByUserEmail(auth.getName());
         int cntProdInCart = Integer.parseInt(cartRepository.countProd(usid));
@@ -77,6 +82,7 @@ public class UserController {
         user.setLast_name(last_name);
         user.setFirst_name(first_name);
         user.setPhoneNumber(phone_num);
+        model.addAttribute("success_edit","*дані успішно зміненні");
         userRepository.save(user);
         return getEditProfilePage(model);
     }

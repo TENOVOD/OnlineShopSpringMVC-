@@ -131,7 +131,7 @@ public class AuthController {
             sendEmail(email,resetPasswordLink);
             model.addAttribute("message","Листа було відпрвленно. Перевірте вашу пошту!");
         } catch (MessagingException e) {
-            model.addAttribute("message","На дану пошту не знайдено");
+            //model.addAttribute("message","На дану пошту не знайдено");
             throw new RuntimeException(e);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);

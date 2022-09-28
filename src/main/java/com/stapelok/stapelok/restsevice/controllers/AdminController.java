@@ -47,7 +47,6 @@ public class AdminController {
         return "admin_edit_prod";
     }
 
-    //main page
     @GetMapping("/add_prod")
     public  String getAddProductPage(Model model){
         return  "admin_add_prod";

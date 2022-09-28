@@ -24,60 +24,69 @@
     <div class="container px-4 px-lg-5 mt-1">
         <div class="mx-auto">
             <div class="col mb-5">
-                <div class="card h-100  p-4">
-                    <div class="row" th:each="el:${products}">
-                        <div class="col-auto mr-auto">
-                            <img class=" img-fluid " th:src="@{'/image/'+${el.product_id}}"
-                                 style="  height: 150px ;width:auto ">
-                        </div>
-                        <div class="col">
-                            <div><a style="color: black; text-decoration: none; " th:href="'/details/'+${el.product_id}" class="mb-0" th:text="${el.name}"></a></div>
-                        </div>
-                        <div class="col">
-                            <div class=" pl-0 flex-sm-col col-auto  my-auto mt-5">
-                                <div th:if="${el.script_id=='1'}">
-                                    <p style="font-size: 0.8em; color: red">*на складі залишилось всього: <b th:text="${el.all_length}"></b> см</p>
+                <div class="card h-100  p-4 text-center">
+                    <div th:if="${products==null}">
+                        <h3>Нажаль кошик порожній</h3><br>
+                        <form action="/" method="get">
+                            <button type="submit" class="btn btn-outline-success ">Обрати товар!
+                            </button>
+                        </form>
+                    </div>
+                    <div th:if="${products!=null}">
+                        <div class="row" th:each="el:${products}">
+                            <div class="col-auto mr-auto">
+                                <img class=" img-fluid " th:src="@{'/image/'+${el.product_id}}"
+                                     style="  height: 150px ;width:auto ">
+                            </div>
+                            <div class="col">
+                                <div><a style="color: black; text-decoration: none; " th:href="'/details/'+${el.product_id}" class="mb-0" th:text="${el.name}"></a></div>
+                            </div>
+                            <div class="col">
+                                <div class=" pl-0 flex-sm-col col-auto  my-auto mt-5">
+                                    <div th:if="${el.script_id=='1'}">
+                                        <p style="font-size: 0.8em; color: red">*на складі залишилось всього: <b th:text="${el.all_length}"></b> см</p>
+                                    </div>
+                                    <form method="get" th:action="'/change-quantity/'+${el.product_id}">
+                                        <input class="btn btn-link"  name="sign" value="-" type="submit" style="color: black; font-size: 1.3em; text-decoration: none; margin-bottom: 7px; " >
+                                        <input type="tel" id="count" name="quantity" min="1" style="min-width: 25px; max-width: 50px; text-align: center" th:value="${el.count}">
+                                        <input  class="btn btn-link" name="sign" value="+" type="submit" style="color: black; font-size: 1.3em; text-decoration: none;margin-bottom: 7px; " >
+                                    </form>
+
                                 </div>
-                                <form method="get" th:action="'/change-quantity/'+${el.product_id}">
-                                    <input class="btn btn-link"  name="sign" value="-" type="submit" style="color: black; font-size: 1.3em; text-decoration: none; margin-bottom: 7px; " >
-                                    <input type="tel" id="count" name="quantity" min="1" style="min-width: 25px; max-width: 50px; text-align: center" th:value="${el.count}">
-                                    <input  class="btn btn-link" name="sign" value="+" type="submit" style="color: black; font-size: 1.3em; text-decoration: none;margin-bottom: 7px; " >
+                            </div>
+                            <div class="col-auto">
+                                <div class=" pl-0 col flex-sm-col col-auto pr-0 d-flex flex-row-reverse  ">
+                                    <a th:href="'/product-delete/'+${el.product_id}" style="text-decoration: none; color: black;"  >&#x2715;</a>
+                                </div>
+                                <div>
+                                    <br>
+                                    <br>
+                                </div>
+                                <div class=" pl-0 col flex-sm-col col-auto pt-5  ">
+                                    <b><span id="price" th:text="${el.price}"></span>&#x20b4;</b>
+                                </div>
+                            </div>
+
+
+                            <hr class="my-2">
+                        </div>
+                        <div class="row ">
+                            <div class="col">
+                                <div class="row justify-content-between">
+                                    <div class="col-4 text-lg-start"><p><b>Всього</b></p></div>
+                                    <div class="flex-sm-col col-auto"><p class="mb-1"><b><span
+                                            th:text="${total_price}"></span>&#x20b4;</b></p></div>
+                                </div>
+                                <hr class="my-0">
+                            </div>
+                        </div>
+                        <div class="row mb-4 mt-4 ">
+                            <div class="col-md-12 text-center ">
+                                <form action="/order" method="get">
+                                    <button type="submit" class="btn btn-outline-success btn-lg">Оформити замовлення
+                                    </button>
                                 </form>
-
                             </div>
-                        </div>
-                        <div class="col-auto">
-                            <div class=" pl-0 col flex-sm-col col-auto pr-0 d-flex flex-row-reverse  ">
-                                <a th:href="'/product-delete/'+${el.product_id}" style="text-decoration: none; color: black;"  >&#x2715;</a>
-                            </div>
-                            <div>
-                                <br>
-                                <br>
-                            </div>
-                            <div class=" pl-0 col flex-sm-col col-auto pt-5  ">
-                                <b><span id="price" th:text="${el.price}"></span>&#x20b4;</b>
-                            </div>
-                        </div>
-
-
-                        <hr class="my-2">
-                    </div>
-                    <div class="row ">
-                        <div class="col">
-                            <div class="row justify-content-between">
-                                <div class="col-4"><p><b>Всього</b></p></div>
-                                <div class="flex-sm-col col-auto"><p class="mb-1"><b><span
-                                        th:text="${total_price}"></span>&#x20b4;</b></p></div>
-                            </div>
-                            <hr class="my-0">
-                        </div>
-                    </div>
-                    <div class="row mb-4 mt-4 ">
-                        <div class="col-md-12 text-center ">
-                            <form action="/order" method="get">
-                                <button type="submit" class="btn btn-outline-success btn-lg">Оформити замовлення
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </div>
