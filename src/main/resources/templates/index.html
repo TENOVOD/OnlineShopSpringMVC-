@@ -75,16 +75,15 @@
                     <!-- Product actions-->
                     <div class="card-footer p-3 pt-0 border-top-0 bg-transparent ">
                         <div th:if="${el.stock_status=='Закінчився'}">
-                            <div class="d-flex justify-content-between align-items-center ">
-                                <a class="btn btn-outline-dark mt-auto" th:href="'/details/'+${el.id}">Детальніше</a>
-                                <a class="btn btn-outline-dark mt-auto disabled" th:href="'/add/'+${el.id}">У кошик</a>
+                            <div class="d-flex justify-content-center  flex-wrap align-items-center">
+                                <a class="btn btn-outline-dark mt-auto m-2" th:href="'/details/'+${el.id}">Детальніше</a>
+                                <a class="btn btn-outline-dark mt-auto  m-2 disabled" th:href="'/add/'+${el.id}">У кошик</a>
                             </div>
                         </div>
                         <div th:if="${el.stock_status!='Закінчився'}">
-                            <div class="d-flex justify-content-between align-items-center ">
-                                <a class="btn btn-outline-dark mt-auto"
-                                   th:href="'/details/'+${el.id}">Детальніше</a>
-                                <a class="btn btn-outline-dark mt-auto " th:href="'/add/'+${el.id}">У кошик</a>
+                            <div class="d-flex justify-content-center  flex-wrap align-items-center ">
+                                <a class="btn btn-outline-dark mt-auto m-2" th:href="'/details/'+${el.id}">Детальніше</a>
+                                <a class="btn btn-outline-dark mt-auto m-2" th:href="'/add/'+${el.id}">У кошик</a>
                             </div>
                         </div>
                     </div>
