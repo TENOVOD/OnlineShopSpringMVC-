@@ -1,7 +1,3 @@
-last_version - final version
-
-
-
 Online store for sale of fabrics (Stapelok)
 
 Java + Spring Boot
